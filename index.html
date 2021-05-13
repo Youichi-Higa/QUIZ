@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>quizアプリ02</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      .header,
+      .footer {
+        width: 100%;
+        background: navy;
+        color: whitesmoke;
+        border: 1px solod #000;
+        box-sizing: border-box;
+        text-align: center;
+      }
+
+      main {
+        font-size: 24px;
+        text-align: center;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+      }
+
+      form ul {
+        list-style: none;
+      }
+
+      #correct {
+        cursor: pointer;
+      }
+
+      .content {
+        margin: 0 auto;
+        padding: 40px;
+      }
+      .modal {
+        display: none;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        width: 100%;
+      }
+      .modal__bg {
+        background: rgba(0, 0, 0, 0.8);
+        height: 100vh;
+        position: absolute;
+        width: 100%;
+      }
+      .modal__content {
+        background: #fff;
+        left: 50%;
+        padding: 40px;
+        position: absolute;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 60%;
+      }
+      #syakyou {
+        cursor: pointer;
+        font-size: 28px;
+      }
+      .js-modal-open {
+        display: none;
+        font-size: 40px;
+        text-align: center;
+      }
+
+      #link_btn {
+        display: none;
+        font-size: 28px;
+      }
+      #link_btn:hover {
+        background: #0066cc;
+        color: #fff;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header class="header">
+      <h1>クイズアプリ02（複数）</h1>
+    </header>
+    <main>
+      <p id="count"></p>
+      <p id="question"></p>
+      <form action="">
+        <ul>
+          <li>
+            <input type="radio" name="choices" id="choices0" value="0" />
+            <label for="choices0" id="choices0_label"></label>
+          </li>
+          <li>
+            <input type="radio" name="choices" id="choices1" value="1" />
+            <label for="choices1" id="choices1_label"></label>
+          </li>
+          <li>
+            <input type="radio" name="choices" id="choices2" value="2" />
+            <label for="choices2" id="choices2_label"></label>
+          </li>
+        </ul>
+      </form>
+    </main>
+    <footer class="footer">
+      <h1 id="result">結果は？</h1>
+      <h1 id="correct"></h1>
+    </footer>
+
+    <div class="content">
+      <a class="js-modal-open" href="">あれ？？？</a>
+    </div>
+    <div class="modal js-modal">
+      <div class="modal__bg js-modal-close"></div>
+      <div class="modal__content">
+        <p id="syakyou">もしかして写経？<br />と思ったそこのあなたには・・・</p>
+        <a id="link_btn" href="create_quiz.html">クイズ登録画面へ</a>
+      </div>
+      <!--modal__inner-->
+    </div>
+    <!--modal-->
+
+    <!-- 音声 -->
+    <audio src="audio/hadoken.mp3" id="hadoken" preload="auto"></audio>
+    <audio src="audio/damage.mp3" id="damage" preload="auto"></audio>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+      // 問題数の配列
+      const quizCount = [1, 2, 3];
+
+      // 問題文の配列
+      const questions = [
+        "コードを書くときに最も重要な要素は??",
+        "課題をつくるときに大事なことは??",
+        "コードを書くのがしんどくなったときはどうする??",
+      ];
+
+      // 選択肢の配列
+      const choices = [
+        ["効率", "経済力", "時間"],
+        ["斬新なアイデア", "コミットする時間", "洗練されたコード"],
+        ["さらにコードを書く", "よく寝る", "ビールを飲む"],
+      ];
+
+      // 答えの配列
+      const correctAnswers = [2, 1, 0];
+
+      // 何問目かカウントするための定義
+      let count = 0;
+      let correctCount = 0;
+
+      // 問題数と問題文と選択肢を表示
+
+      function qs(a) {
+        $("#count").text("第" + quizCount[a] + "問");
+        $("#question").text(questions[a]);
+        $("#choices0_label").text(choices[a][0]);
+        $("#choices1_label").text(choices[a][1]);
+        $("#choices2_label").text(choices[a][2]);
+      }
+
+      qs(count);
+
+      // ラジオボタンをクリック
+      $('input[name = "choices"]').on("click", function (e) {
+        // console.log(e.target.value);
+
+        if (e.target.value == correctAnswers[count]) {
+          $("#result").text("正解です");
+          correctCount++;
+        } else {
+          $("#result").text("不正解です");
+        }
+
+        count++;
+
+        if (count < questions.length) {
+          qs(count);
+        } else {
+          $("#correct").text("正解数は" + correctCount + "問です");
+        }
+      });
+
+      $("#correct").on("click", function () {
+        $(".js-modal-open").fadeIn();
+      });
+
+      $(function () {
+        $(".js-modal-open").on("click", function () {
+          $(".js-modal").fadeIn();
+          return false;
+        });
+        $(".js-modal-close").on("click", function () {
+          $(".js-modal").fadeOut();
+          return false;
+        });
+      });
+      $("#syakyou").on("click", function sound() {
+        $("#link_btn").fadeIn();
+        $("#hadoken").get(0).currentTime = 0;
+        $("#hadoken").get(0).play();
+        setTimeout(function () {
+          $("#damage").get(0).currentTime = 0;
+          $("#damage").get(0).play();
+        }, 800);
+      });
+    </script>
+  </body>
+</html>

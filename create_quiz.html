@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="jn">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>クイズ登録画面</title>
+    <style>
+      .header {
+        width: 100%;
+        background: navy;
+        color: whitesmoke;
+        border: 1px solod #000;
+        box-sizing: border-box;
+        text-align: center;
+      }
+
+      main {
+        font-size: 24px;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+      }
+
+      form ul {
+        list-style: none;
+      }
+      p {
+        margin: 20px 0 0;
+      }
+
+      input {
+        width: 100%;
+        font-size: 100%;
+      }
+      ul {
+        padding: 0;
+        border-top: 1px solid #000000;
+        display: table; /* 定義 */
+        table-layout: fixed;
+        width: 100%;
+      }
+      li {
+        list-style-type: none;
+        border: 1px solid #666;
+        background-color: #fff;
+        display: table-cell; /* 定義 */
+        cursor: pointer;
+        text-align: center;
+        font-size: 30px;
+      }
+      li:hover {
+        background: #0066cc;
+        color: #fff;
+      }
+      select {
+        font-size: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header class="header">
+      <h1>クイズ登録画面</h1>
+    </header>
+
+    <main>
+      <p>問題文</p>
+      <input type="text" name="" id="question" />
+      <p>選択肢１</p>
+      <input type="text" name="" id="choices1" />
+      <p>選択肢２</p>
+      <input type="text" name="" id="choices2" />
+      <p>選択肢３</p>
+      <input type="text" name="" id="choices3" />
+      <p>答え</p>
+      <input type="number" min="1" max="3" name="" id="correctAnswer" />
+
+      <ul>
+        <li id="save">保存</li>
+        <li id="clear">削除</li>
+      </ul>
+
+      <a href="answer_quiz.html">クイズ回答画面</a>
+    </main>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+      //1.Save クリックイベント
+      $("#save").on("click", function () {
+        const question = $("#question").val();
+        const choices1 = $("#choices1").val();
+        const choices2 = $("#choices2").val();
+        const choices3 = $("#choices3").val();
+        const correctAnswer = $("#correctAnswer").val();
+        const date = [question, choices1, choices2, choices3, correctAnswer];
+        console.log(date);
+        const jsonDate = JSON.stringify(date);
+        localStorage.setItem("quiz", jsonDate);
+      });
+      //2.clear クリックイベント
+      $("#clear").on("click", function () {
+        localStorage.removeItem("quiz");
+        $(text_area).val("");
+      });
+    </script>
+  </body>
+</html>

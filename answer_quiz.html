@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>クイズ回答画面</title>
+    <style>
+      .header,
+      .footer {
+        width: 100%;
+        background: navy;
+        color: whitesmoke;
+        border: 1px solod #000;
+        box-sizing: border-box;
+        text-align: center;
+      }
+
+      main {
+        font-size: 24px;
+        text-align: center;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+      }
+
+      form ul {
+        list-style: none;
+      }
+      #load_btn {
+        font-size: 20px;
+        cursor: pointer;
+        width: max-content;
+      }
+      #load_btn:hover {
+        background: #0066cc;
+        color: #fff;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="load_btn">読込</div>
+
+    <header class="header">
+      <h1>クイズ回答画面</h1>
+    </header>
+    <main>
+      <p id="count">問題</p>
+      <p id="question"></p>
+      <form action="">
+        <ul>
+          <li>
+            <input type="radio" name="choices" id="choices0" value="1" />
+            <label for="choices0" id="choices0_label"></label>
+          </li>
+          <li>
+            <input type="radio" name="choices" id="choices1" value="2" />
+            <label for="choices1" id="choices1_label"></label>
+          </li>
+          <li>
+            <input type="radio" name="choices" id="choices2" value="3" />
+            <label for="choices2" id="choices2_label"></label>
+          </li>
+        </ul>
+      </form>
+    </main>
+    <footer class="footer">
+      <h1 id="result">結果は？</h1>
+      <h1 id="correct"></h1>
+    </footer>
+    <a href="create_quiz.html">クイズ登録画面</a>
+
+    <!-- 音声 -->
+    <audio src="audio/hadoken.mp3" id="hadoken" preload="auto"></audio>
+    <audio src="audio/KO.mp3" id="KO" preload="auto"></audio>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+      //ページ読み込み：保存データ取得表示
+      $("#load_btn").on("click", function () {
+        if (localStorage.getItem("quiz")) {
+          const jsonDate = localStorage.getItem("quiz");
+          const date = JSON.parse(jsonDate);
+          console.log(date);
+
+          $("#question").text(date[0]);
+          $("#choices0_label").text(date[1]);
+          $("#choices1_label").text(date[2]);
+          $("#choices2_label").text(date[3]);
+        } else {
+          alert("データなし");
+        }
+      });
+
+      // function hadoken() {
+      //   function sound() {
+      //     $("#hadoken").get(0).currentTime = 0;
+      //     $("#hadoken").get(0).play();
+      //   }
+      // }
+
+      // ラジオボタンをクリック
+      $('input[name = "choices"]').on("click", function (e) {
+        console.log(e.target.value);
+        const jsonDate = localStorage.getItem("quiz");
+        const date = JSON.parse(jsonDate);
+        const correctAnswer = date[4];
+
+        if (e.target.value == correctAnswer) {
+          $("#result").text("正解です");
+          $(function sound() {
+            $("#hadoken").get(0).currentTime = 0;
+            $("#hadoken").get(0).play();
+          });
+        } else {
+          $("#result").text("不正解です");
+          $(function sound() {
+            $("#KO").get(0).currentTime = 0;
+            $("#KO").get(0).play();
+          });
+        }
+      });
+    </script>
+  </body>
+</html>
